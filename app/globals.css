@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --royal-purple: #5f27cd;
+  --deep-purple: #341f97;
+  --blending-green: #4CAF50;
+  --light-bg: #f5f6fa;
+  --dark-bg: #1e1e2f;
+  --glass: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--dark-bg);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* Allows footer-like behavior */
+  align-items: center;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Caution message styling */
+.disclaimer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 0.75rem;
+  color: #aaa;
+  text-align: center;
+  padding: 10px;
+  background: rgba(30, 30, 47, 0.85); /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* Glass effect */
+}
+
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--royal-purple);
+  text-align: center;
+}
+
+input, button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--blending-green);
+  box-shadow: 0 0 5px var(--blending-green);
+}
+
+button {
+  background: var(--royal-purple);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--blending-green);
+}
+
