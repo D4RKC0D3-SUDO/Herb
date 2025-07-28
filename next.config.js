@@ -4,3 +4,5 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+export const output = 'export';
+
