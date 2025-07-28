@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { auth } from '@/firebase/firebase'
-import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { onAuthStateChanged } from 'firebase/auth'  // ⛔ Removed signOut
 import remedies from '@/data/remedies'
 
 export default function SearchPage() {
@@ -38,15 +38,6 @@ export default function SearchPage() {
     setResults(filtered)
   }
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      router.replace('/')
-    } catch (err) {
-      console.error('Logout failed:', err)
-    }
-  }
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#0c0c2e] to-[#1a1a3d] text-white px-6 py-10">
       <motion.div
@@ -56,15 +47,7 @@ export default function SearchPage() {
         className="max-w-4xl mx-auto"
       >
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-purple-400">🌿 HERB</h1>
-          {user && (
-            <button
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-md text-sm transition"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          )}
+          {/* Logout button removed */}
         </div>
 
         <form className="flex flex-col items-center" onSubmit={handleSearch}>

@@ -5,10 +5,56 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { Search, Leaf, Sparkles, HeartPulse } from 'lucide-react'
+import { signOut } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
+import { auth } from '@/firebase/firebase'
+
+function LogoutButton() {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      router.replace('/')
+    } catch (err) {
+      console.error('Logout failed:', err)
+    }
+  }
+
+  return (
+    <button
+      className="absolute top-6 right-6 px-3 py-1 bg-red-500 hover:bg-red-600 rounded-md text-xs text-white transition"
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+  )
+}
+
+function FeatureCard({ icon, title, desc }) {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.03 }}
+      className="card p-6 text-center bg-[#151429] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+    >
+      <div className="mb-3">{icon}</div>
+      <h3 className="text-xl font-semibold mb-2 text-purple-100">{title}</h3>
+      <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+    </motion.div>
+  )
+}
+
+FeatureCard.propTypes = {
+  icon: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
+  desc: PropTypes.string.isRequired,
+}
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#0e0d24] via-[#121132] to-[#090820] text-white flex flex-col items-center justify-center px-4 py-24">
+    <main className="relative min-h-screen bg-gradient-to-br from-[#0e0d24] via-[#121132] to-[#090820] text-white flex flex-col items-center justify-center px-4 py-24">
+      <LogoutButton />
+
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -68,24 +114,4 @@ export default function HomePage() {
         </motion.div>
       </section>
     </main>
-  )
-}
-
-function FeatureCard({ icon, title, desc }) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="card p-6 text-center bg-[#151429] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-    >
-      <div className="mb-3">{icon}</div>
-      <h3 className="text-xl font-semibold mb-2 text-purple-100">{title}</h3>
-      <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
-    </motion.div>
-  )
-}
-
-FeatureCard.propTypes = {
-  icon: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  desc: PropTypes.string.isRequired,
-}
+  ) }
