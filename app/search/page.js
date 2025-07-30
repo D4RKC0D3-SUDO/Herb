@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { auth } from '@/firebase/firebase'
-import { onAuthStateChanged } from 'firebase/auth'  // ⛔ Removed signOut
+import { onAuthStateChanged } from 'firebase/auth' 
 import remedies from '@/data/remedies'
 
 export default function SearchPage() {
@@ -47,7 +47,7 @@ export default function SearchPage() {
         className="max-w-4xl mx-auto"
       >
         <div className="flex justify-between items-center mb-8">
-          {/* Logout button removed */}
+          
         </div>
 
         <form className="flex flex-col items-center" onSubmit={handleSearch}>
@@ -78,7 +78,7 @@ export default function SearchPage() {
               animate={{ opacity: 1 }}
               className="text-center text-gray-500"
             >
-              {query ? 'No herbal alternatives found.' : 'Enter a prescription to begin.'}
+              
             </motion.p>
           ) : (
             results.map((item, idx) => (
