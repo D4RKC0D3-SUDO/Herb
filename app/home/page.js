@@ -5,31 +5,6 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import { Search, Leaf, Sparkles, HeartPulse } from 'lucide-react'
-import { signOut } from 'firebase/auth'
-import { useRouter } from 'next/navigation'
-import { auth } from '@/firebase/firebase'
-
-function LogoutButton() {
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      router.replace('/')
-    } catch (err) {
-      console.error('Logout failed:', err)
-    }
-  }
-
-  return (
-    <button
-      className="absolute top-6 right-6 px-3 py-1 bg-red-500 hover:bg-red-600 rounded-md text-xs text-white transition"
-      onClick={handleLogout}
-    >
-      Logout
-    </button>
-  )
-}
 
 function FeatureCard({ icon, title, desc }) {
   return (
@@ -53,17 +28,13 @@ FeatureCard.propTypes = {
 export default function HomePage() {
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-[#0e0d24] via-[#121132] to-[#090820] text-white flex flex-col items-center justify-center px-4 py-24">
-      <LogoutButton />
-
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="text-center max-w-3xl"
       >
-        <h1 className="text-6xl font-black mb-5 bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text drop-shadow-lg">
-          HERB
-        </h1>
+        
 
         <motion.p
           initial={{ opacity: 0 }}
@@ -75,18 +46,7 @@ export default function HomePage() {
           Backed by traditional wisdom, curated for modern wellness.
         </motion.p>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link href="/search">
-            <div className="bg-purple-700 hover:bg-purple-800 px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-all duration-200">
-              <Search size={18} /> Explore Remedies
-            </div>
-          </Link>
-          <Link href="/">
-            <div className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md flex items-center gap-2 cursor-pointer transition-all duration-200">
-              <Leaf size={18} /> Go Home
-            </div>
-          </Link>
-        </div>
+     
       </motion.div>
 
       <section className="mt-28 max-w-5xl w-full">
@@ -114,4 +74,5 @@ export default function HomePage() {
         </motion.div>
       </section>
     </main>
-  ) }
+  )
+}

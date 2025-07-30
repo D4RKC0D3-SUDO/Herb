@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
       <body className="bg-white dark:bg-[#0c0c2e] dark:text-white text-black font-sans transition-colors duration-300 relative">
 
         {/* 🔮 Background Glow */}
@@ -27,17 +30,16 @@ export default function RootLayout({ children }) {
 
         {/* ☀️ / 🌙 Mode Toggle */}
         <button
-          className="mode-toggle"
+          className="mode-toggle fixed top-4 right-4 z-50"
           onClick={() => document.body.classList.toggle('light-mode')}
         >
           ☀️ / 🌙
         </button>
 
-        <div className="flex min-h-screen">
+        {/* 🧭 Layout */}
+        <div className="flex flex-col md:flex-row min-h-screen">
           <Sidebar />
-
-          {/* 🌿 Main Content */}
-          <main className="ml-0 md:ml-64 flex-1 p-6 bg-gradient-to-br from-transparent via-purple-950 to-[#0c0c2e]">
+          <main className="flex-1 p-4 sm:p-6 bg-gradient-to-br from-transparent via-purple-950 to-[#0c0c2e] overflow-x-hidden">
             {children}
           </main>
         </div>

@@ -182,3 +182,14 @@ body.light-mode .card {
 body.light-mode a:hover {
   text-shadow: 0 0 8px var(--color-accent);
 }
+.remedy-page.sleep {
+  border-top: 4px solid #6C2BD9;
+}
+
+.remedy-page.stress {
+  border-top: 4px solid #00D084;
+}
+
+.remedy-page.digestive {
+  border-top: 4px solid #F5F5F5;
+}
