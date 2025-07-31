@@ -11,13 +11,13 @@
   --blur-glow: rgba(108, 43, 217, 0.5);
 }
 
-/* 🌌 Body & Base Reset */
+/* 🌌 Cosmic Mode (Default) */
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #0e0c1a, #1f1d2e);
-  color: var(--color-text);
   font-family: var(--font-main);
+  color: var(--color-text);
+  background: linear-gradient(135deg, var(--color-bg), var(--color-bg-light));
   transition: all 0.3s ease-in-out;
   scroll-behavior: smooth;
   line-height: 1.8;
@@ -25,13 +25,7 @@ body {
   overflow-x: hidden;
 }
 
-main, .section {
-  padding: 3rem 2rem;
-  max-width: 1300px;
-  margin: 0 auto;
-}
-
-/* 🌀 Background Glow */
+/* 🔭 Cosmic Glow */
 .background-glow {
   position: fixed;
   top: -150px;
@@ -50,7 +44,14 @@ main, .section {
   50% { transform: scale(1.2); opacity: 0.35; }
 }
 
-/* ⚡ Mode Toggle */
+/* ✨ Layout Containers */
+main, .section {
+  padding: 3rem 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* ⚡ Toggle Button */
 .mode-toggle {
   position: fixed;
   top: 1.2rem;
@@ -65,36 +66,28 @@ main, .section {
   box-shadow: 0 0 20px var(--blur-glow);
   transition: background 0.3s ease;
 }
-
 .mode-toggle:hover {
   background: var(--color-accent);
   transform: scale(1.05);
 }
 
-/* ✨ Card Styling */
+/* 🧊 Card */
 .card {
   background-color: var(--color-bg-light);
+  color: var(--color-text);
   border-radius: 24px;
   padding: 2rem;
   box-shadow: var(--card-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .card:hover {
   transform: scale(1.03);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
 }
 
-/* 🌿 Card Grid */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-}
-
-/* 🧬 Inputs */
+/* 🧬 Input */
 input {
   background: #22202f;
   color: var(--color-text);
@@ -103,7 +96,6 @@ input {
   padding: 1rem;
   transition: all 0.3s ease;
 }
-
 input:focus {
   border-color: var(--color-primary);
   background-color: #2a2940;
@@ -120,7 +112,6 @@ button {
   box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
 }
-
 button:hover {
   background: var(--color-accent);
   transform: scale(1.05) rotate(-0.5deg);
@@ -132,7 +123,6 @@ a {
   text-decoration: none;
   transition: all 0.3s ease;
 }
-
 a:hover {
   text-shadow: 0 0 10px var(--color-primary);
   transform: translateY(-2px);
@@ -144,12 +134,10 @@ h1, h2, h3 {
   letter-spacing: -0.5px;
   line-height: 1.2;
 }
-
 h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
 }
-
 p {
   font-size: 1.05rem;
   max-width: 800px;
@@ -169,27 +157,107 @@ p {
   border-radius: 10px;
 }
 
-/* 🌞 Light Mode */
-body.light-mode {
-  background-color: #f9f9f9;
-  color: #111;
-}
-body.light-mode .card {
-  background-color: #ffffff;
-  color: #111;
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
-}
-body.light-mode a:hover {
-  text-shadow: 0 0 8px var(--color-accent);
-}
-.remedy-page.sleep {
-  border-top: 4px solid #6C2BD9;
+/* 🧘 Remedy Borders */
+.remedy-page.sleep     { border-top: 4px solid #6C2BD9; }
+.remedy-page.stress    { border-top: 4px solid #00D084; }
+.remedy-page.digestive { border-top: 4px solid #F5F5F5; }
+
+
+
+
+
+/* 🌿 Forest Mode Overrides */
+body.forest-mode {
+  background: linear-gradient(135deg, #dbeede, #e6f4ea);
+  color: #1a3c2d;
 }
 
-.remedy-page.stress {
-  border-top: 4px solid #00D084;
+body.forest-mode .background-glow {
+  background: radial-gradient(ellipse at center, rgba(163, 97, 255, 0.25) 0%, transparent 70%);
 }
 
-.remedy-page.digestive {
-  border-top: 4px solid #F5F5F5;
+body.forest-mode .card {
+  background-color: #dbeede;
+  color: #1a3c2d;
+  border: 1px solid #b3dec5;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+body.forest-mode input {
+  background-color: #c7e6d2;
+  color: #1a3c2d;
+  border: 2px solid #7dc9a0;
+}
+body.forest-mode input:focus {
+  background-color: #b4dbc2;
+  border-color: #4fa878;
+}
+
+body.forest-mode button {
+  background: linear-gradient(to right, #7dc9a0, #4fa878);
+  color: #fff;
+}
+
+body.forest-mode a {
+  color: #1a3c2d;
+}
+body.forest-mode a:hover {
+  text-shadow: 0 0 8px #4fa878;
+}
+
+body.forest-mode .mode-toggle {
+  background: #4fa878;
+  box-shadow: 0 0 15px rgba(79, 168, 120, 0.5);
+}
+body.forest-mode .mode-toggle:hover {
+  background: #7dc9a0;
+}
+/* 🌿 Forest Mode: Enhanced Elegance */
+body.forest-mode {
+  background: linear-gradient(135deg, #0b1f1a, #0e3c2e); /* Deep forest green gradient */
+  color: #e3f2e1; /* Soft minty readable text */
+}
+
+body.forest-mode .background-glow {
+  background: radial-gradient(ellipse at center, rgba(79, 168, 120, 0.3) 0%, transparent 70%);
+}
+
+body.forest-mode .card {
+  background-color: #163c32;
+  color: #e3f2e1;
+  border: 1px solid #285c4d;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+body.forest-mode input {
+  background-color: #244c3e;
+  color: #e3f2e1;
+  border: 2px solid #4fa878;
+}
+body.forest-mode input::placeholder {
+  color: #b9dccb; /* Placeholder contrast */
+}
+body.forest-mode input:focus {
+  background-color: #2c5f4d;
+  border-color: #6dcaa2;
+}
+
+body.forest-mode button {
+  background: linear-gradient(to right, #4fa878, #2f7b5f);
+  color: #fff;
+}
+
+body.forest-mode a {
+  color: #e3f2e1;
+}
+body.forest-mode a:hover {
+  text-shadow: 0 0 8px #4fa878;
+}
+
+body.forest-mode .mode-toggle {
+  background: #2f7b5f;
+  box-shadow: 0 0 15px rgba(47, 123, 95, 0.5);
+}
+body.forest-mode .mode-toggle:hover {
+  background: #4fa878;
 }
