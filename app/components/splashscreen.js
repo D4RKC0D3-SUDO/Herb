@@ -29,7 +29,7 @@ export default function SplashScreen({ onFinish }) {
         transition={{ duration: 0.8 }}
         className="text-5xl font-bold tracking-widest"
       >
-        🌿 HERB
+        H🌿RB
       </motion.h1>
       <motion.p
         initial={{ opacity: 0 }}
