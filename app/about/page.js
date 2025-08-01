@@ -41,7 +41,7 @@ export default function InfoPage() {
           variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
           className="text-lg text-gray-300 mb-6 leading-relaxed"
         >
-          HERB was created for those pursuing true healing—not just relief, but renewal. We believe wellness should be rooted in nature, informed by research, and inspired by the sacred design of creation.
+          HERB was created for those pursuing true healing not just relief, but renewal. We believe wellness should be rooted in nature, informed by research, and inspired by the sacred design of creation.
         </motion.p>
 
         <motion.p
@@ -56,7 +56,7 @@ export default function InfoPage() {
           🚨 A Sobering Reality
         </motion.h2>
         <motion.p className="text-gray-300 leading-relaxed mb-6">
-          Over <strong>100,000 people</strong> die annually from side effects of prescribed medications—not abuse, just directions followed. The opioid crisis alone has taken more than <strong>500,000 lives</strong>. These are not failures of science, but reminders that quick fixes often come with hidden costs.
+          Over <strong>100,000 people</strong> die annually from side effects of prescribed medications not abuse, just directions followed. The opioid crisis alone has taken more than <strong>500,000 lives</strong>. These are not failures of science, but reminders that quick fixes often come with hidden costs.
         </motion.p>
 
         {/* 🌿 Remedy Facts */}
@@ -71,12 +71,12 @@ export default function InfoPage() {
         </motion.ul>
 
         <motion.p className="text-gray-300 mb-6 leading-relaxed">
-          These remedies do not overpower—they harmonize. Plants contain synergistic compounds that collaborate naturally, a phenomenon known as the <em>entourage effect</em>. It's something pharmaceutical chemistry still can't mimic.
+          These remedies do not overpower they harmonize. Plants contain synergistic compounds that collaborate naturally, a phenomenon known as the <em>entourage effect</em>. It's something pharmaceutical chemistry still can't mimic.
         </motion.p>
 
         {/* 🌍 Indigenous Insight */}
         <motion.p className="text-gray-300 mb-6 leading-relaxed">
-          From the Maasai of Kenya to the Yanomami of Brazil, earth-based medicine was never mere trial—it was sacred knowledge. These practices nourished communities long before modern labs, and ironically, many pharmaceuticals began by borrowing their secrets.
+          From the Maasai of Kenya to the Yanomami of Brazil, earth-based medicine was never mere trial it was sacred knowledge. These practices nourished communities long before modern labs, and ironically, many pharmaceuticals began by borrowing their secrets.
         </motion.p>
 
         {/* ✝️ Spiritual Reflection */}
@@ -84,7 +84,7 @@ export default function InfoPage() {
           ✝️ From Dust, Healing Rises
         </motion.h2>
         <motion.p className="text-gray-300 leading-relaxed mb-8">
-          According to Genesis, mankind was formed from the soil. The same earth that birthed us holds what restores us. When Jesus healed, He often did so with what was already present: touch, clay, water, presence. This is divine design. Healing is not hidden in complexity—it’s offered in creation.
+          According to Genesis, mankind was formed from the soil. The same earth that birthed us holds what restores us. When Jesus healed, He often did so with what was already present: touch, clay, water, presence. This is divine design. Healing is not hidden in complexity it’s offered in creation.
         </motion.p>
 
         {/* 💡 Closing Motivation */}
@@ -92,7 +92,7 @@ export default function InfoPage() {
           “Healing isn’t always manufactured. Sometimes, it’s grown.”
         </motion.p>
         <motion.p className="text-sm text-purple-400 text-center mt-2">
-          — HERB Team
+          HERB Team
         </motion.p>
       </motion.div>
     </motion.main>

@@ -36,20 +36,20 @@ export default function ContactPage() {
           name="name"
           required
           placeholder="Your name"
-          className="w-full mb-4 p-3 rounded-lg bg-[#29294a] placeholder-gray-400 text-white border border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full mb-4 p-3 rounded-lg bg-[#1f1f3d] placeholder-gray-400 text-gray-100 border border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
         <input
           type="email"
           name="email"
           required
           placeholder="Your email"
-          className="w-full mb-4 p-3 rounded-lg bg-[#29294a] placeholder-gray-400 text-white border border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full mb-4 p-3 rounded-lg bg-[#1f1f3d] placeholder-gray-400 text-gray-100 border border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
         <textarea
           name="message"
           required
           placeholder="Your message"
-          className="w-full h-32 p-3 mb-4 rounded-lg bg-[#29294a] placeholder-gray-400 text-white border border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+          className="w-full h-32 p-3 mb-4 rounded-lg bg-[#1f1f3d] placeholder-gray-400 text-gray-100 border border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
         ></textarea>
         <button
           type="submit"
