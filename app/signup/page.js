@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 
 export default function SignUp() {
   const [credentials, setCredentials] = useState({ email: '', password: '' })
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
 
@@ -15,9 +16,20 @@ export default function SignUp() {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
 
+  const isStrongPassword = (password) => {
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$/
+    return regex.test(password)
+  }
+
   const handleSignUp = async (e) => {
     e.preventDefault()
     setError('')
+
+    if (!isStrongPassword(credentials.password)) {
+      setError('Password must be at least 8 characters long and include a number and special character.')
+      return
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
       router.push('/')
@@ -49,16 +61,22 @@ export default function SignUp() {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="text-sm text-gray-300">Password</label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               value={credentials.password}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 rounded-md bg-[#2a2a45] text-white border border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 text-purple-300 cursor-pointer text-sm"
+            >
+              {showPassword ? '🙈 Hide' : '👁 Show'}
+            </span>
           </div>
 
           {error && (

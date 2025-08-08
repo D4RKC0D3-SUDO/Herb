@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { auth } from '@/firebase/firebase'
 import { onAuthStateChanged } from 'firebase/auth' 
@@ -24,6 +25,19 @@ export default function SearchPage() {
     return () => unsubscribe()
   }, [router])
 
+  const saveSearchToLocalStorage = (searchResult) => {
+    if (!user) return
+
+    const uid = user.uid
+    const allSearches = JSON.parse(localStorage.getItem('savedSearches')) || {}
+    const userSearches = allSearches[uid] || []
+
+    userSearches.push(searchResult)
+    allSearches[uid] = userSearches
+
+    localStorage.setItem('savedSearches', JSON.stringify(allSearches))
+  }
+
   const handleSearch = (e) => {
     e.preventDefault()
     const filtered = remedies
@@ -36,6 +50,9 @@ export default function SearchPage() {
           .sort((a, b) => (b.effectiveness || 0) - (a.effectiveness || 0))
       }))
     setResults(filtered)
+
+    // Save each result to localStorage
+    filtered.forEach((item) => saveSearchToLocalStorage(item))
   }
 
   return (
@@ -46,8 +63,12 @@ export default function SearchPage() {
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto"
       >
-        <div className="flex justify-between items-center mb-8">
-          
+        <div className="flex justify-end mb-6">
+          <Link href="/savedsearches">
+            <button className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700 transition text-sm">
+              📁 View Saved Searches
+            </button>
+          </Link>
         </div>
 
         <form className="flex flex-col items-center" onSubmit={handleSearch}>
@@ -78,7 +99,7 @@ export default function SearchPage() {
               animate={{ opacity: 1 }}
               className="text-center text-gray-500"
             >
-              
+              {/* No results yet */}
             </motion.p>
           ) : (
             results.map((item, idx) => (

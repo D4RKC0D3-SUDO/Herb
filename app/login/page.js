@@ -11,6 +11,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -49,14 +50,22 @@ export default function LoginPage() {
             required
             className="w-full px-4 py-3 bg-[#262649] border border-purple-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-3 bg-[#262649] border border-purple-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-3 bg-[#262649] border border-purple-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-purple-300 cursor-pointer text-sm"
+            >
+              {showPassword ? '🙈 Hide' : '👁 Show'}
+            </span>
+          </div>
           {error && (
             <motion.p
               initial={{ opacity: 0 }}
