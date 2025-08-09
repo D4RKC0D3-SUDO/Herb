@@ -1,4 +1,4 @@
-package com.sukus.herbapp;
+package com.sukus.herb;
 
 import com.getcapacitor.BridgeActivity;
 

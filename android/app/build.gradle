@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.sukus.herbapp"
+    namespace "com.sukus.herb"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.sukus.herbapp"
+        applicationId "com.sukus.herb"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
