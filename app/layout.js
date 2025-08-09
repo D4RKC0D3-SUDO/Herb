@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 
 export default function RootLayout({ children }) {
   const [showSplash, setShowSplash] = useState(true)
-  const [isForestMode, setIsForestMode] = useState(false)
+  const [mode, setMode] = useState('cosmic') // 'cosmic', 'forest', 'earth'
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 3000)
@@ -21,8 +21,11 @@ export default function RootLayout({ children }) {
   }, [])
 
   const handleModeToggle = () => {
-    setIsForestMode(!isForestMode)
-    document.body.classList.toggle('forest-mode')
+    const nextMode = mode === 'cosmic' ? 'forest' : mode === 'forest' ? 'earth' : 'cosmic'
+    setMode(nextMode)
+
+    document.body.classList.remove('cosmic-mode', 'forest-mode', 'earth-mode')
+    document.body.classList.add(`${nextMode}-mode`)
   }
 
   return (
@@ -31,16 +34,16 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>HERB</title>
       </head>
-      <body className="font-sans transition-colors duration-300 relative bg-[#0c0c2e] text-white">
-        {/* 🔮 Cosmic Background Glow */}
+      <body className="font-sans transition-colors duration-300 relative cosmic-mode">
+        {/* 🔮 Background Glow */}
         <div className="background-glow" />
 
-        {/* 🌲 Forest / 🌌 Cosmic Toggle */}
+        {/* 🌲🌌🌍 Mode Toggle */}
         <button
           onClick={handleModeToggle}
           className="mode-toggle fixed top-4 right-4 z-50"
         >
-          {isForestMode ? '🌌 Cosmic' : '🌲 Forest'}
+          {mode === 'cosmic' ? '🌲 Forest' : mode === 'forest' ? '🌍 Earth' : '🌌 Cosmic'}
         </button>
 
         {/* 🎬 Splash Screen */}
@@ -56,11 +59,7 @@ export default function RootLayout({ children }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className={`flex-1 p-4 sm:p-6 overflow-x-hidden ${
-                isForestMode
-                  ? 'bg-gradient-to-br from-green-200 via-green-300 to-green-500 text-green-950'
-                  : 'bg-gradient-to-br from-transparent via-purple-950 to-[#0c0c2e]'
-              }`}
+              className={`flex-1 p-4 sm:p-6 overflow-x-hidden`}
             >
               {children}
             </motion.main>

@@ -1,45 +1,15 @@
 const remedies = [
-    {
-      prescription: "ibuprofen",
-      alternatives: [
-    { 
-  name: "Turmeric", 
-  source: "Turmeric root", 
-  use: "Anti-inflammatory", 
-  dosage: "500mg twice daily", 
-  details: "Commonly found in markets and spice shops. Generally safe, but high doses should be avoided in pregnancy and people on blood thinners." 
+  {
+  prescription: "ibuprofen",
+  alternatives: [
+    { name: "Turmeric", source: "Turmeric root", use: "Anti-inflammatory", dosage: "500mg twice daily" },
+    { name: "Ginger", source: "Fresh root", use: "Pain relief", dosage: "1000mg daily" },
+    { name: "Boswellia", source: "Frankincense", use: "Reduces arthritis symptoms", dosage: "300mg twice daily" },
+    { name: "Omega-3", source: "Fish oil", use: "Joint health", dosage: "1000mg daily" },
+    { name: "White Willow Bark", source: "Tree bark", use: "Natural aspirin", dosage: "240mg daily" }
+  ]
 },
-{ 
-  name: "Ginger", 
-  source: "Fresh root", 
-  use: "Pain relief", 
-  dosage: "1000mg daily", 
-  details: "Easily available at local markets. Safe for children and pregnancy in small amounts. May affect blood pressure and blood sugar in high doses." 
-},
-{ 
-  name: "Boswellia", 
-  source: "Frankincense", 
-  use: "Reduces arthritis symptoms", 
-  dosage: "300mg twice daily", 
-  details: "Sourced from specialty herbal stores. Avoid during pregnancy. Consult if you have immune disorders." 
-},
-{ 
-  name: "Omega-3", 
-  source: "Fish oil", 
-  use: "Joint health", 
-  dosage: "1000mg daily", 
-  details: "Available in pharmacies and health stores. Safe for most people. May increase bleeding risk with blood thinners." 
-},
-{ 
-  name: "White Willow Bark", 
-  source: "Tree bark", 
-  use: "Natural aspirin", 
-  dosage: "240mg daily", 
-  details: "Found in herbal shops. Not for children (Reye’s syndrome risk), pregnant women, or those allergic to aspirin." 
-}
-      ]
-    },
-    
+
     {
       prescription: "antihistamine",
       alternatives: [

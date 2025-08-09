@@ -261,3 +261,52 @@ body.forest-mode .mode-toggle {
 body.forest-mode .mode-toggle:hover {
   background: #4fa878;
 }
+/* 🌍 Earth Mode */
+body.earth-mode {
+  background: linear-gradient(135deg, #3b2f24, #5a4636);
+  color: #f3e9dc;
+}
+
+body.earth-mode .background-glow {
+  background: radial-gradient(ellipse at center, rgba(139, 108, 76, 0.3) 0%, transparent 70%);
+}
+
+body.earth-mode .card {
+  background-color: #4b3a2e;
+  color: #f3e9dc;
+  border: 1px solid #7a5c47;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+body.earth-mode input {
+  background-color: #5a4636;
+  color: #f3e9dc;
+  border: 2px solid #a67c52;
+}
+body.earth-mode input::placeholder {
+  color: #d2bba3;
+}
+body.earth-mode input:focus {
+  background-color: #6b5240;
+  border-color: #c89f70;
+}
+
+body.earth-mode button {
+  background: linear-gradient(to right, #a67c52, #7a5c47);
+  color: #fff;
+}
+
+body.earth-mode a {
+  color: #f3e9dc;
+}
+body.earth-mode a:hover {
+  text-shadow: 0 0 8px #a67c52;
+}
+
+body.earth-mode .mode-toggle {
+  background: #7a5c47;
+  box-shadow: 0 0 15px rgba(122, 92, 71, 0.5);
+}
+body.earth-mode .mode-toggle:hover {
+  background: #a67c52;
+}

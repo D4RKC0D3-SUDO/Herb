@@ -5,8 +5,15 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { auth } from '@/firebase/firebase'
-import { onAuthStateChanged } from 'firebase/auth' 
+import { onAuthStateChanged } from 'firebase/auth'
 import remedies from '@/data/remedies'
+
+// Fuzzy match helper
+const fuzzyMatch = (input, target) => {
+  const normalizedInput = input.toLowerCase().trim()
+  const normalizedTarget = target.toLowerCase().trim()
+  return normalizedTarget.includes(normalizedInput) || normalizedInput.includes(normalizedTarget)
+}
 
 export default function SearchPage() {
   const router = useRouter()
@@ -40,23 +47,21 @@ export default function SearchPage() {
 
   const handleSearch = (e) => {
     e.preventDefault()
+    const cleanedQuery = query.toLowerCase().trim()
+
     const filtered = remedies
-      .filter((item) =>
-        item.prescription.toLowerCase().includes(query.toLowerCase())
-      )
+      .filter((item) => fuzzyMatch(cleanedQuery, item.prescription))
       .map((item) => ({
         ...item,
-        alternatives: item.alternatives
-          .sort((a, b) => (b.effectiveness || 0) - (a.effectiveness || 0))
+        alternatives: item.alternatives.sort((a, b) => (b.effectiveness || 0) - (a.effectiveness || 0))
       }))
-    setResults(filtered)
 
-    // Save each result to localStorage
+    setResults(filtered)
     filtered.forEach((item) => saveSearchToLocalStorage(item))
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#0c0c2e] to-[#1a1a3d] text-white px-6 py-10">
+    <main className="min-h-screen bg-gradient-to-br from-[#0c0c2e] via-[#1a1a3d] to-[#0c0c2e] text-white px-6 py-10">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -92,14 +97,14 @@ export default function SearchPage() {
           Discover nature’s alternatives to modern medicine.
         </p>
 
-        <section className="mt-10 space-y-6">
+        <section className="mt-10 space-y-8">
           {results.length === 0 ? (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-center text-gray-500"
             >
-              {/* No results yet */}
+              No remedies found. Try a different spelling or keyword.
             </motion.p>
           ) : (
             results.map((item, idx) => (
@@ -108,30 +113,48 @@ export default function SearchPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-[#1f1f3b] p-5 rounded-lg shadow-md border border-purple-700"
+                className="bg-[#1f1f3b] p-6 rounded-xl shadow-lg border border-purple-700"
               >
-                <h2 className="text-xl font-bold mb-3 text-purple-300">{item.prescription}</h2>
-                <ul className="space-y-2 text-sm">
+                <h2 className="text-2xl font-bold mb-5 text-purple-300 text-center">
+                  {item.prescription}
+                </h2>
+
+                {/* Most Helpful Alternatives */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   {item.alternatives.slice(0, 2).map((alt, i) => (
-                    <li key={i}>
-                      🌟 <strong>{alt.name}</strong> — {alt.use}<br />
-                      <em>Dosage:</em> {alt.dosage}
-                    </li>
+                    <div
+                      key={i}
+                      className="bg-gradient-to-r from-purple-700 to-purple-900 p-4 rounded-lg shadow-md border border-purple-500"
+                    >
+                      <h3 className="text-lg font-semibold text-white mb-2">🌟 {alt.name}</h3>
+                      <p><em>Source:</em> {alt.source}</p>
+                      <p><em>Use:</em> {alt.use}</p>
+                      <p><em>Dosage:</em> {alt.dosage}</p>
+                    </div>
                   ))}
-                  {item.alternatives.length > 2 && (
-                    <details className="mt-2">
-                      <summary className="cursor-pointer text-purple-500">More alternatives</summary>
-                      <ul className="mt-2 space-y-1">
-                        {item.alternatives.slice(2).map((alt, i) => (
-                          <li key={i}>
-                            <strong>{alt.name}</strong> — {alt.use}<br />
-                            <em>Dosage:</em> {alt.dosage}
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  )}
-                </ul>
+                </div>
+
+                {/* Expandable More Alternatives */}
+                {item.alternatives.length > 2 && (
+                  <details className="mt-4">
+                    <summary className="cursor-pointer text-purple-400 hover:text-purple-300 transition font-medium">
+                      ➕ More Alternatives
+                    </summary>
+                    <ul className="mt-4 space-y-3 text-sm">
+                      {item.alternatives.slice(2).map((alt, i) => (
+                        <li
+                          key={i}
+                          className="bg-[#2a2a4d] p-4 rounded-md border border-purple-600"
+                        >
+                          <strong>{alt.name}</strong>
+                          <div><em>Source:</em> {alt.source}</div>
+                          <div><em>Use:</em> {alt.use}</div>
+                          <div><em>Dosage:</em> {alt.dosage}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
               </motion.div>
             ))
           )}
