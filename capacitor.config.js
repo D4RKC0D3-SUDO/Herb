@@ -1,6 +1,6 @@
 module.exports = {
   appId: 'com.sukus.herb',
-  appName: 'herb-app',
+  appName: 'The Herb',
   webDir: 'out',
   bundledWebRuntime: false,
 };
