@@ -1,64 +1,76 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { auth } from '@/firebase/firebase'
-import { onAuthStateChanged } from 'firebase/auth'
-import remedies from '@/data/remedies'
-
-// Fuzzy match helper
-const fuzzyMatch = (input, target) => {
-  const normalizedInput = input.toLowerCase().trim()
-  const normalizedTarget = target.toLowerCase().trim()
-  return normalizedTarget.includes(normalizedInput) || normalizedInput.includes(normalizedTarget)
-}
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { auth } from '@/firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function SearchPage() {
-  const router = useRouter()
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState([])
-  const [user, setUser] = useState(null)
+  const router = useRouter();
+  const params = useSearchParams();
+  const initialQ = params?.get('q') || '';
 
+  const [user, setUser] = useState(null);
+  const [query, setQuery] = useState(initialQ);
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Auth check
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user)
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      if (u) {
+        setUser(u);
       } else {
-        router.replace('/')
+        router.replace('/');
       }
-    })
-    return () => unsubscribe()
-  }, [router])
+    });
+    return () => unsubscribe();
+  }, [router]);
 
-  const saveSearchToLocalStorage = (searchResult) => {
-    if (!user) return
-
-    const uid = user.uid
-    const allSearches = JSON.parse(localStorage.getItem('savedSearches')) || {}
-    const userSearches = allSearches[uid] || []
-
-    userSearches.push(searchResult)
-    allSearches[uid] = userSearches
-
-    localStorage.setItem('savedSearches', JSON.stringify(allSearches))
-  }
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    const cleanedQuery = query.toLowerCase().trim()
-
-    const filtered = remedies
-      .filter((item) => fuzzyMatch(cleanedQuery, item.prescription))
-      .map((item) => ({
+  // Search logic
+  const doSearch = async (q) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q || '')}`);
+      const data = await res.json();
+      const sorted = data.map((item) => ({
         ...item,
-        alternatives: item.alternatives.sort((a, b) => (b.effectiveness || 0) - (a.effectiveness || 0))
-      }))
+        alternatives: item.alternatives.sort((a, b) => (b.effectiveness || 0) - (a.effectiveness || 0)),
+      }));
+      setResults(sorted);
+      sorted.forEach((item) => saveSearchToLocalStorage(item));
+    } catch (err) {
+      console.error(err);
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setResults(filtered)
-    filtered.forEach((item) => saveSearchToLocalStorage(item))
-  }
+  // Auto-run search from URL
+  useEffect(() => {
+    if (initialQ) {
+      doSearch(initialQ);
+    }
+  }, [initialQ]);
+
+  // Save to localStorage
+  const saveSearchToLocalStorage = (searchResult) => {
+    if (!user) return;
+    const uid = user.uid;
+    const allSearches = JSON.parse(localStorage.getItem('savedSearches')) || {};
+    const userSearches = allSearches[uid] || [];
+    userSearches.push(searchResult);
+    allSearches[uid] = userSearches;
+    localStorage.setItem('savedSearches', JSON.stringify(allSearches));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    doSearch(query);
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#0c0c2e] via-[#1a1a3d] to-[#0c0c2e] text-white px-6 py-10">
@@ -76,7 +88,7 @@ export default function SearchPage() {
           </Link>
         </div>
 
-        <form className="flex flex-col items-center" onSubmit={handleSearch}>
+        <form className="flex flex-col items-center" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Search a prescription..."
@@ -97,8 +109,12 @@ export default function SearchPage() {
           Discover nature’s alternatives to modern medicine.
         </p>
 
+        {loading && (
+          <p className="text-center text-purple-400 mt-6">Loading remedies...</p>
+        )}
+
         <section className="mt-10 space-y-8">
-          {results.length === 0 ? (
+          {!loading && results.length === 0 ? (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -118,8 +134,8 @@ export default function SearchPage() {
                 <h2 className="text-2xl font-bold mb-5 text-purple-300 text-center">
                   {item.prescription}
                 </h2>
+                <p className="text-sm text-gray-400 text-center mb-4">{item.description}</p>
 
-                {/* Most Helpful Alternatives */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   {item.alternatives.slice(0, 2).map((alt, i) => (
                     <div
@@ -134,7 +150,6 @@ export default function SearchPage() {
                   ))}
                 </div>
 
-                {/* Expandable More Alternatives */}
                 {item.alternatives.length > 2 && (
                   <details className="mt-4">
                     <summary className="cursor-pointer text-purple-400 hover:text-purple-300 transition font-medium">
@@ -165,5 +180,5 @@ export default function SearchPage() {
         </footer>
       </motion.div>
     </main>
-  )
+  );
 }

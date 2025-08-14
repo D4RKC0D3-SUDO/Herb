@@ -609,8 +609,6 @@ alternatives: [
     { name: "Bacopa Monnieri", source: "Herb", use: "Improves memory", dosage: "300mg daily" }
   ]
 }
-
-
    
   ]
 export default remedies
