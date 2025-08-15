@@ -1,29 +1,35 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firebaseApp, firebaseAuth, firebaseDb } from '@/lib/firebaseClient';
+import { firebaseAuth, firebaseDb } from '@/lib/firebaseClient';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+const ADMIN_EMAIL = 'eldadthukujr@gmail.com';
 
 export default function AdminPage() {
   const [user, setUser] = useState(null);
   const [prescription, setPrescription] = useState('');
-  const [alternatives, setAlternatives] = useState([
-    { name: '', source: '', use: '', dosage: '' }
-  ]);
+  const [alternatives, setAlternatives] = useState([{ name: '', source: '', use: '', dosage: '' }]);
   const [status, setStatus] = useState('');
 
-  // Check if user is logged in
+  // ✅ Auth check
   useEffect(() => {
     const unsub = onAuthStateChanged(firebaseAuth, (u) => setUser(u));
     return () => unsub();
   }, []);
 
+  // ✅ Restrict non-admins
+  if (user && user.email !== ADMIN_EMAIL) {
+    return (
+      <main className="min-h-screen flex items-center justify-center text-white bg-[#0c0c2e]">
+        <h1 className="text-2xl">❌ You are not authorized to access this page.</h1>
+      </main>
+    );
+  }
+
   const addRow = () =>
-    setAlternatives((prev) => [
-      ...prev,
-      { name: '', source: '', use: '', dosage: '' }
-    ]);
+    setAlternatives((prev) => [...prev, { name: '', source: '', use: '', dosage: '' }]);
 
   const updateAlt = (idx, field, value) =>
     setAlternatives((prev) => {
@@ -32,30 +38,32 @@ export default function AdminPage() {
       return cp;
     });
 
-  const removeAlt = (idx) =>
-    setAlternatives((prev) => prev.filter((_, i) => i !== idx));
+  const removeAlt = (idx) => setAlternatives((prev) => prev.filter((_, i) => i !== idx));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus('Saving...');
 
     if (!user) {
       setStatus('Please log in.');
       return;
     }
 
-    setStatus('Saving to Firestore...');
+    if (user.email !== ADMIN_EMAIL) {
+      setStatus('❌ You are not authorized to add prescriptions.');
+      return;
+    }
 
     try {
-      // Save to Firestore
       await addDoc(collection(firebaseDb, 'prescriptions'), {
         prescription,
-        prescription_lc: prescription.toLowerCase(), // for case-insensitive search
+        prescription_lc: prescription.toLowerCase(),
         alternatives,
         createdAt: serverTimestamp(),
-        addedBy: user.uid
+        addedBy: user.uid,
       });
 
-      setStatus('Saved! Redirecting...');
+      setStatus('✅ Saved! Redirecting...');
       window.location.href = `/search?q=${encodeURIComponent(prescription)}`;
     } catch (err) {
       console.error(err);
@@ -66,9 +74,7 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-[#0c0c2e] text-white px-6 py-10">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-purple-300">
-          Admin — Add Prescription
-        </h1>
+        <h1 className="text-3xl font-bold mb-6 text-purple-300">Admin — Add Prescription</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <input
             type="text"
