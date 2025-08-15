@@ -1,23 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { firebaseApp } from '@/lib/firebaseClient'; // Ensure this exists
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { firebaseApp, firebaseAuth, firebaseDb } from '@/lib/firebaseClient';
+import { onAuthStateChanged } from 'firebase/auth';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function AdminPage() {
-  const auth = getAuth(firebaseApp);
   const [user, setUser] = useState(null);
   const [prescription, setPrescription] = useState('');
-  const [alternatives, setAlternatives] = useState([{ name: '', source: '', use: '', dosage: '' }]);
+  const [alternatives, setAlternatives] = useState([
+    { name: '', source: '', use: '', dosage: '' }
+  ]);
   const [status, setStatus] = useState('');
 
+  // Check if user is logged in
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+    const unsub = onAuthStateChanged(firebaseAuth, (u) => setUser(u));
     return () => unsub();
-  }, [auth]);
+  }, []);
 
   const addRow = () =>
-    setAlternatives((prev) => [...prev, { name: '', source: '', use: '', dosage: '' }]);
+    setAlternatives((prev) => [
+      ...prev,
+      { name: '', source: '', use: '', dosage: '' }
+    ]);
 
   const updateAlt = (idx, field, value) =>
     setAlternatives((prev) => {
@@ -31,28 +37,26 @@ export default function AdminPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('Saving...');
+
     if (!user) {
       setStatus('Please log in.');
       return;
     }
 
+    setStatus('Saving to Firestore...');
+
     try {
-      const idToken = await user.getIdToken();
-      const res = await fetch('/api/admin/prescriptions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({ prescription, alternatives }),
+      // Save to Firestore
+      await addDoc(collection(firebaseDb, 'prescriptions'), {
+        prescription,
+        prescription_lc: prescription.toLowerCase(), // for case-insensitive search
+        alternatives,
+        createdAt: serverTimestamp(),
+        addedBy: user.uid
       });
 
-      const body = await res.json();
-      if (!res.ok) throw new Error(body?.error || 'Save failed');
-
-      const q = encodeURIComponent(prescription);
-      window.location.href = `/search?q=${q}`;
+      setStatus('Saved! Redirecting...');
+      window.location.href = `/search?q=${encodeURIComponent(prescription)}`;
     } catch (err) {
       console.error(err);
       setStatus(`Error: ${err.message}`);
@@ -62,7 +66,9 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-[#0c0c2e] text-white px-6 py-10">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-purple-300">Admin — Add Prescription</h1>
+        <h1 className="text-3xl font-bold mb-6 text-purple-300">
+          Admin — Add Prescription
+        </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <input
             type="text"

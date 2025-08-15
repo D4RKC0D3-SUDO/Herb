@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { auth } from '@/firebase/firebase';
+import { firebaseAuth, firebaseDb } from '@/lib/firebaseClient';
 import { onAuthStateChanged } from 'firebase/auth';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function SearchPage() {
   const router = useRouter();
@@ -13,13 +14,13 @@ export default function SearchPage() {
   const initialQ = params?.get('q') || '';
 
   const [user, setUser] = useState(null);
-  const [query, setQuery] = useState(initialQ);
+  const [queryText, setQueryText] = useState(initialQ);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Auth check
+  // Check login
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (u) => {
       if (u) {
         setUser(u);
       } else {
@@ -29,18 +30,20 @@ export default function SearchPage() {
     return () => unsubscribe();
   }, [router]);
 
-  // Search logic
-  const doSearch = async (q) => {
+  // Search function (Firestore)
+  const doSearch = async (searchTerm) => {
+    if (!searchTerm.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(q || '')}`);
-      const data = await res.json();
-      const sorted = data.map((item) => ({
-        ...item,
-        alternatives: item.alternatives.sort((a, b) => (b.effectiveness || 0) - (a.effectiveness || 0)),
-      }));
-      setResults(sorted);
-      sorted.forEach((item) => saveSearchToLocalStorage(item));
+      const prescriptionsRef = collection(firebaseDb, 'prescriptions');
+      const q = query(
+        prescriptionsRef,
+        where('prescription_lc', '==', searchTerm.toLowerCase())
+      );
+
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map(doc => doc.data());
+      setResults(data);
     } catch (err) {
       console.error(err);
       setResults([]);
@@ -49,27 +52,16 @@ export default function SearchPage() {
     }
   };
 
-  // Auto-run search from URL
+  // Run search on load if URL had ?q=
   useEffect(() => {
     if (initialQ) {
       doSearch(initialQ);
     }
   }, [initialQ]);
 
-  // Save to localStorage
-  const saveSearchToLocalStorage = (searchResult) => {
-    if (!user) return;
-    const uid = user.uid;
-    const allSearches = JSON.parse(localStorage.getItem('savedSearches')) || {};
-    const userSearches = allSearches[uid] || [];
-    userSearches.push(searchResult);
-    allSearches[uid] = userSearches;
-    localStorage.setItem('savedSearches', JSON.stringify(allSearches));
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    doSearch(query);
+    doSearch(queryText);
   };
 
   return (
@@ -92,8 +84,8 @@ export default function SearchPage() {
           <input
             type="text"
             placeholder="Search a prescription..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={queryText}
+            onChange={(e) => setQueryText(e.target.value)}
             required
             className="w-full max-w-md p-3 mb-4 rounded-lg border border-purple-500 bg-[#1f1f3b] text-white focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
@@ -134,7 +126,6 @@ export default function SearchPage() {
                 <h2 className="text-2xl font-bold mb-5 text-purple-300 text-center">
                   {item.prescription}
                 </h2>
-                <p className="text-sm text-gray-400 text-center mb-4">{item.description}</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   {item.alternatives.slice(0, 2).map((alt, i) => (
@@ -142,7 +133,9 @@ export default function SearchPage() {
                       key={i}
                       className="bg-gradient-to-r from-purple-700 to-purple-900 p-4 rounded-lg shadow-md border border-purple-500"
                     >
-                      <h3 className="text-lg font-semibold text-white mb-2">🌟 {alt.name}</h3>
+                      <h3 className="text-lg font-semibold text-white mb-2">
+                        🌟 {alt.name}
+                      </h3>
                       <p><em>Source:</em> {alt.source}</p>
                       <p><em>Use:</em> {alt.use}</p>
                       <p><em>Dosage:</em> {alt.dosage}</p>
