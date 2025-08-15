@@ -1,5 +1,4 @@
-{
-  "name": "herb-app",
+{ "name": "herb-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,13 +7,6 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
-    "prisma:generate": "npx prisma generate",
-    "prisma:studio": "npx prisma studio",
-    "prisma:format": "npx prisma format",
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:reset": "npx prisma migrate reset",
-    "prisma:seed": "node prisma/seed.js",
-    "db:reset": "npx prisma migrate reset --force && npx prisma generate && npm run prisma:seed",
     "import:local": "node scripts/importLocalRemedies.js"
   },
   "dependencies": {

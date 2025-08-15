@@ -15,17 +15,28 @@ export default function RootLayout({ children }) {
   const [showSplash, setShowSplash] = useState(true)
   const [mode, setMode] = useState('cosmic') // 'cosmic', 'forest', 'earth'
 
+  // Splash Screen Timeout
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 3000)
     return () => clearTimeout(timer)
   }, [])
 
+  // Load saved mode
+  useEffect(() => {
+    const savedMode = localStorage.getItem('herb-mode')
+    if (savedMode) setMode(savedMode)
+  }, [])
+
+  // Apply mode classes
+  useEffect(() => {
+    document.body.classList.remove('cosmic-mode', 'forest-mode', 'earth-mode')
+    document.body.classList.add(`${mode}-mode`)
+    localStorage.setItem('herb-mode', mode)
+  }, [mode])
+
   const handleModeToggle = () => {
     const nextMode = mode === 'cosmic' ? 'forest' : mode === 'forest' ? 'earth' : 'cosmic'
     setMode(nextMode)
-
-    document.body.classList.remove('cosmic-mode', 'forest-mode', 'earth-mode')
-    document.body.classList.add(`${nextMode}-mode`)
   }
 
   return (
@@ -34,16 +45,19 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>HERB</title>
       </head>
-      <body className="font-sans transition-colors duration-300 relative cosmic-mode">
-        {/* 🔮 Background Glow */}
-        <div className="background-glow" />
+      <body className="font-sans transition-colors duration-500 relative">
+
+        {/* 🌌 Fancy Background Glow */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div className={`w-full h-full ${mode}-glow animate-pulse`}></div>
+        </div>
 
         {/* 🌲🌌🌍 Mode Toggle */}
         <button
           onClick={handleModeToggle}
-          className="mode-toggle fixed top-4 right-4 z-50"
+          className="mode-toggle fixed top-4 right-4 z-50 px-4 py-2 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white rounded-lg shadow-lg backdrop-blur-sm hover:scale-105 transition-transform"
         >
-          {mode === 'cosmic' ? '🌲 Forest' : mode === 'forest' ? '🌍 Earth' : '🌌 Cosmic'}
+          {mode === 'cosmic' ? '🌌 Cosmic' : mode === 'forest' ? '🌲 Forest' : '🌍 Earth'}
         </button>
 
         {/* 🎬 Splash Screen */}
@@ -54,12 +68,18 @@ export default function RootLayout({ children }) {
         {/* 🧭 Layout Content */}
         {!showSplash && (
           <div className="flex flex-col md:flex-row min-h-screen">
-            <Sidebar />
+            {/* Sidebar */}
+            <aside className="md:w-64 w-full h-screen fixed md:relative z-40">
+              <Sidebar />
+            </aside>
+
+            {/* Main Content */}
             <motion.main
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5 }}
-              className={`flex-1 p-4 sm:p-6 overflow-x-hidden`}
+              className="flex-1 p-6 md:ml-64 overflow-x-hidden"
             >
               {children}
             </motion.main>

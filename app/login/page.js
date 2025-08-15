@@ -88,12 +88,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-purple-300 mt-6">
-          No account?{' '} {/* Passive-aggressive nudge to sign up. */}
-          <Link href="/signup" className="underline hover:text-purple-500 transition">
-            Sign up {/* Because lurking isn’t a long-term strategy. */}
-          </Link>
-        </p>
+        
       </motion.div>
     </main>
   )

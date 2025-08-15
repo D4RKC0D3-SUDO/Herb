@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">herb-app</string>
-    <string name="title_activity_main">herb-app</string>
+    <string name="app_name">HERB</string>
+    <string name="title_activity_main">HERB</string>
     <string name="package_name">com.sukus.herb</string>
     <string name="custom_url_scheme">com.sukus.herb</string>
 </resources>

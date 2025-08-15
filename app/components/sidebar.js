@@ -1,78 +1,86 @@
-'use client'
-
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import {
-  Info,
-  PhoneCall,
-  Sparkles,
-  HeartPulse,
-  LogOut,
-} from 'lucide-react'
-import { signOut } from 'firebase/auth'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { auth } from '@/firebase/firebase'
-import { motion } from 'framer-motion'
+import { Sparkles, Info, HeartPulse, PhoneCall, LogOut } from 'lucide-react'
 
 const navLinks = [
-  { href: '/home', label: 'Home', icon: <Sparkles size={22} className="text-purple-300" /> },
-  { href: '/about', label: 'About', icon: <Info size={22} className="text-blue-300" /> },
-  { href: '/search', label: 'Remedies', icon: <HeartPulse size={22} className="text-green-300" /> },
-  { href: '/contacts', label: 'Contact', icon: <PhoneCall size={22} className="text-yellow-300" /> },
+  { href: '/home', label: 'Home', icon: <Sparkles size={20} /> },
+  { href: '/about', label: 'About', icon: <Info size={20} /> },
+  { href: '/search', label: 'Remedies', icon: <HeartPulse size={20} /> },
+  { href: '/contacts', label: 'Contact', icon: <PhoneCall size={20} /> },
 ]
 
-export default function Sidebar() {
-  const pathname = usePathname()
-  const router = useRouter()
+function Navbar() {
+  const [user, setUser] = useState(null)
+  const [paddingValue, setPaddingValue] = useState('16px')
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+    return () => unsubscribe()
+  }, [])
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      router.replace('/')
-    } catch (err) {
-      console.error('Logout failed:', err)
-    }
+    await signOut(auth)
   }
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 z-40 bg-gradient-to-br from-[#161622] via-[#1d1b33] to-[#0c0c23] text-white border-r border-purple-700/30 flex flex-col justify-between">
-      {/* 🌿 Logo */}
-      <div className="px-6 py-6">
-        <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-purple-400 drop-shadow">
+    <div
+      style={{ padding: paddingValue }}
+      className="w-full bg-gradient-to-r from-[#161622] via-[#1d1b33] to-[#0c0c23] text-white flex items-center justify-between shadow-md border-b border-purple-700/30"
+    >
+      {/* Logo */}
+      <div className="flex items-center gap-4">
+        <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-purple-400">
           H🌿RB
-        </h2>
+        </h1>
       </div>
 
-      {/* 🔗 Navigation */}
-      <nav className="flex flex-col gap-3 px-4">
-        {navLinks.map(({ href, label, icon }) => {
-          const isActive = pathname === href
-          return (
+      {/* Navigation Links */}
+      {user && (
+        <div className="flex items-center gap-6">
+          {navLinks.map(({ href, label, icon }) => (
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-4 px-4 py-3 rounded-md text-base font-medium transition ${
-                isActive
-                  ? 'bg-purple-600/40 ring-1 ring-purple-500 text-white shadow'
-                  : 'hover:bg-purple-700/10 text-gray-300 hover:text-purple-200'
-              }`}
+              className="flex items-center gap-2 px-8 py-2 rounded hover:bg-purple-700/20 transition font-medium"
             >
               {icon}
               <span>{label}</span>
             </Link>
-          )
-        })}
-      </nav>
+          ))}
+        </div>
+      )}
 
-      {/* 🔓 Logout */}
-      <div className="p-4 border-t border-purple-700/20">
+      {/* Logout Icon Only */}
+      {user && (
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-md text-base font-semibold bg-red-500 hover:bg-red-600 transition text-white"
+          className="p-2 bg-red-500 hover:bg-red-600 rounded-full transition text-white"
         >
-          <LogOut size={22} />
-          <span>Logout</span>
+          <LogOut size={20} />
         </button>
-      </div>
-    </aside>
+      )}
+
+      {/* If user not logged in, show Login / Signup */}
+      {!user && (
+        <div className="flex items-center gap-4">
+          <Link href="/login">
+            <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded transition">
+              Login
+            </button>
+          </Link>
+          <Link href="/signup">
+            <button className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded transition">
+              Sign Up
+            </button>
+          </Link>
+        </div>
+      )}
+    </div>
   )
 }
+
+export default Navbar
