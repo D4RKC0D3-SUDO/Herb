@@ -33,9 +33,9 @@ export default function SearchPage() {
         className="max-w-4xl mx-auto"
       >
         <div className="flex justify-end mb-6">
-          <Link href="/savedsearches">
+          <Link href="/viewall">
             <button className="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700 transition text-sm">
-              📁 View Saved Searches
+              📁 View All Remedies
             </button>
           </Link>
         </div>
