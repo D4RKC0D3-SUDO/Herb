@@ -4,3 +4,4 @@ module.exports = {
   webDir: 'out', // Must match your Next.js export folder
   bundledWebRuntime: false,
 };
+ 
